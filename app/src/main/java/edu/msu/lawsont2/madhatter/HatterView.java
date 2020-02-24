@@ -8,6 +8,7 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -427,6 +428,15 @@ public class HatterView extends View {
             float angle2 = angle(touch1.x, touch1.y, touch2.x, touch2.y);
             float da = angle2 - angle1;
             rotate(da, touch1.x, touch1.y);
+
+            /*
+             * Scaling
+             */
+            touch2.computeDeltas();
+            double x = touch1.dX - touch2.dX;
+            double y = touch1.dY - touch2.dY;
+            float dSize = (float)Math.sqrt(x*x + y*y);
+            scale(dSize);
         }
     }
 
@@ -448,6 +458,14 @@ public class HatterView extends View {
 
         params.hatX = xp;
         params.hatY = yp;
+    }
+
+    /**
+     * grow or shrink the image
+     * @param dSize Amount to change scale factor
+     */
+    public void scale(float dSize) {
+        params.hatScale += dSize;
     }
 
     /**
