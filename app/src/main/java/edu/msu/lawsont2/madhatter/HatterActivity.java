@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -25,6 +27,8 @@ public class HatterActivity extends AppCompatActivity {
      * Request code when selecting a picture
      */
     private static final int SELECT_PICTURE = 1;
+
+    private static final String PARAMETERS = "parameters";
 
     /**
      * The hatter view object
@@ -45,6 +49,13 @@ public class HatterActivity extends AppCompatActivity {
      */
     private CheckBox getFeatherCheck() {
         return (CheckBox)findViewById(R.id.checkFeather);
+    }
+
+    /**
+     * The hat choice spinner
+     */
+    private Spinner getSpinner() {
+        return (Spinner) findViewById(R.id.spinnerHat);
     }
 
     @Override
@@ -79,13 +90,6 @@ public class HatterActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * The hat choice spinner
-     */
-    private Spinner getSpinner() {
-        return (Spinner) findViewById(R.id.spinnerHat);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +102,50 @@ public class HatterActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
         }
+
+        /*
+         * Set up the spinner
+         */
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.hats_spinner, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        getSpinner().setAdapter(adapter);
+
+        getSpinner().setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View view,
+                                       int pos, long id) {
+                getHatterView().setHat(pos);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+
+        });
+
+        /*
+         * Restore any state
+         */
+        if(savedInstanceState != null) {
+            getHatterView().getFromBundle(PARAMETERS, savedInstanceState);
+
+            getSpinner().setSelection(getHatterView().getHat());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        getHatterView().putToBundle(PARAMETERS, outState);
     }
 
     /**
@@ -112,4 +160,6 @@ public class HatterActivity extends AppCompatActivity {
 
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
+
+
 }
