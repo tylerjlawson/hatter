@@ -10,10 +10,11 @@
         android:id="@+id/buttonColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/buttonPicture"
         android:layout_alignParentStart="true"
-        android:text="@string/color_string"
-        android:layout_alignEnd="@+id/buttonPicture" />
+        android:layout_alignParentBottom="true"
+        android:onClick="onColor"
+        android:text="@string/color_string" />
 
     <CheckBox
         android:id="@+id/checkFeather"
@@ -21,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/buttonColor"
         android:layout_toEndOf="@+id/buttonColor"
+        android:onClick="onCheckbox"
         android:text="@string/feather_string" />
 
     <Button

@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -53,6 +54,11 @@ public class HatterView extends View {
          * Custom hat color
          */
         public int color = Color.WHITE;
+
+        /**
+         * Boolean to draw feather
+         */
+        public boolean drawthefeather = false;
     }
 
     /**
@@ -69,6 +75,12 @@ public class HatterView extends View {
      * The image bitmap. None initially.
      */
     private Bitmap imageBitmap = null;
+
+    /**
+     * The image bitmap. None initially.
+     */
+    private final Bitmap featherBitmap = BitmapFactory.decodeResource(getResources(),
+                                                                    R.drawable.feather);
 
     /**
      * Image drawing scale
@@ -182,6 +194,14 @@ public class HatterView extends View {
     }
 
     /**
+     * Get the current hat type
+     * @return one of the hat type values HAT_BLACK, etc.
+     */
+    public boolean getFeather() {
+        return params.drawthefeather;
+    }
+
+    /**
      * Set the hat type
      * @param hat hat type value, HAT_BLACK, etc.
      */
@@ -289,6 +309,15 @@ public class HatterView extends View {
 
         if(hatbandBitmap != null) {
             canvas.drawBitmap(hatbandBitmap, 0, 0, null);
+        }
+
+        if(params.drawthefeather) {
+            // Android scaled images that it loads. The placement of the
+            // feather is at 322, 22 on the original image when it was
+            // 500 pixels wide. It will have to move based on how big
+            // the hat image actually is.
+            float factor = hatBitmap.getWidth() / 500.0f;
+            canvas.drawBitmap(featherBitmap, 322 * factor, 22 * factor, null);
         }
 
         canvas.restore();
@@ -465,7 +494,8 @@ public class HatterView extends View {
      * @param dSize Amount to change scale factor
      */
     public void scale(float dSize) {
-        params.hatScale += dSize;
+        //params.hatScale += dSize;
+        Log.i("scale", Float.toString(dSize));
     }
 
     /**
@@ -526,4 +556,10 @@ public class HatterView extends View {
         setImagePath(params.imagePath);
         setHat(params.hat);
     }
+
+    public void toggleFeather() {
+        params.drawthefeather = !params.drawthefeather;
+        invalidate();
+    }
+
 }
