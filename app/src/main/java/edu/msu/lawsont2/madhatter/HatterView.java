@@ -432,12 +432,25 @@ public class HatterView extends View {
             /*
              * Scaling
              */
-            touch2.computeDeltas();
-            double x = touch1.dX - touch2.dX;
-            double y = touch1.dY - touch2.dY;
-            float dSize = (float)Math.sqrt(x*x + y*y);
-            scale(dSize);
+            float a = length(touch1.lastX, touch1.lastY, touch2.lastX, touch2.lastY);
+            float b = length(touch1.x, touch1.y, touch2.x, touch2.y);
+            scale(b / a, touch1.x, touch1.y);
         }
+    }
+
+    /**
+     * Math distance
+     * @param x1 touch1 x
+     * @param y1 touch1 y
+     * @param x2 touch2 x
+     * @param y2 touch2 y
+     * @return distance
+     */
+    private float length(float x1, float y1, float x2, float y2) {
+        // sqrt of x^2 + y^2
+        float x = x2 - x1;
+        float y = y2 - y1;
+        return (float)Math.sqrt(x * x + y * y);
     }
 
     /**
@@ -462,10 +475,17 @@ public class HatterView extends View {
 
     /**
      * grow or shrink the image
-     * @param dSize Amount to change scale factor
+     * @param scale Amount to change scale factor
+     * @param x change x
+     * @param y change y
      */
-    public void scale(float dSize) {
-        params.hatScale += dSize;
+    public void scale(float scale, float x, float y) {
+        // update scale value
+        params.hatScale *= scale;
+
+        // Update position
+        params.hatX = x + (params.hatX - x) * scale;
+        params.hatY = y + (params.hatY - y) * scale;
     }
 
     /**
