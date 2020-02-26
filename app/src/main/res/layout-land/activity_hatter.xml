@@ -13,6 +13,7 @@
         android:layout_below="@id/buttonPicture"
         android:layout_alignStart="@id/buttonPicture"
         android:layout_alignEnd="@+id/buttonPicture"
+        android:onClick="onColor"
         android:text="@string/color_string" />
 
     <Button
@@ -20,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:onClick="onPicture"
         android:paddingLeft="60dp"
         android:paddingRight="60dp"
@@ -33,6 +34,7 @@
         android:layout_below="@id/spinnerHat"
         android:layout_alignStart="@id/spinnerHat"
         android:layout_alignEnd="@id/buttonPicture"
+        android:onClick="onCheckbox"
         android:text="@string/feather_string" />
 
     <Spinner
@@ -51,7 +53,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="0dp"
         android:layout_toStartOf="@id/buttonPicture"
         android:background="@android:color/black" />

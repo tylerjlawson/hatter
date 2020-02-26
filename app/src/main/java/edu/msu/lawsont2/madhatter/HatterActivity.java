@@ -28,6 +28,8 @@ public class HatterActivity extends AppCompatActivity {
      */
     private static final int SELECT_PICTURE = 1;
 
+    private static final int SELECT_COLOR = 2;
+
     private static final String PARAMETERS = "parameters";
 
     /**
@@ -87,6 +89,12 @@ public class HatterActivity extends AppCompatActivity {
                 getHatterView().setImagePath(path);
             }
 
+        } else if (requestCode == SELECT_COLOR && resultCode == Activity.RESULT_OK) {
+            String colorStr = data.getStringExtra("COLOR");
+            if (colorStr != null) {
+                int color = Integer.parseInt(colorStr);
+                getHatterView().setColor(color);
+            }
         }
     }
 
@@ -123,6 +131,7 @@ public class HatterActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> arg0, View view,
                                        int pos, long id) {
                 getHatterView().setHat(pos);
+                getColorButton().setEnabled(pos == 2);
             }
 
             @Override
@@ -136,9 +145,16 @@ public class HatterActivity extends AppCompatActivity {
          */
         if(savedInstanceState != null) {
             getHatterView().getFromBundle(PARAMETERS, savedInstanceState);
-
-            getSpinner().setSelection(getHatterView().getHat());
+            updateUI();
         }
+    }
+
+    /**
+     * Ensure the user interface components match the current state
+     */
+    private void updateUI() {
+        getSpinner().setSelection(getHatterView().getHat());
+        getFeatherCheck().setSelected(getHatterView().getFeather());
     }
 
     @Override
@@ -161,5 +177,12 @@ public class HatterActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
+    public void onCheckbox(View view) {
+        getHatterView().toggleFeather();
+    }
 
+    public void onColor(View view) {
+        Intent intent = new Intent(this, ColorSelectActivity.class);
+        startActivityForResult(intent,  SELECT_COLOR);
+    }
 }
